@@ -28,13 +28,19 @@ class DepartmentController extends Controller
 
     public function store(Request $request)
     {
+        $check_if_existing = Department::where('name', $request-> name)
+        ->where('company_id', $request->company_id)
+        ->exists();
+        if($check_if_existing) {
+            return response()->json(['message' => 'Cannot save the same shits'], 422);
+        }
         $request->validate([
             'company_id' => 'required|exists:companies,id',
-            'name' => 'required|unique:departments,name',
+            'name' => 'required',
             'budget' => 'required',
         ], [
             'name.required' => 'The department name field is required.',
-            'name.unique' => 'This department name already exists.',
+            // 'name.unique' => 'This department name already exists.',
             'company_id.required' => 'The company field is required.',
             'company_id.exists' => 'The selected company does not exist.',
         ]);

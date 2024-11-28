@@ -2,8 +2,9 @@
 @section('content')
 
     <div id="app">
-    <users-component></users-component>
-
+        <employees-component
+        :companies ="{{json_encode($companies)}}">
+    </employees-component>
     </div>
 
 @stop

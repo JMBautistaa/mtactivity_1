@@ -52,6 +52,7 @@ Vue.component('regions-component', require('./components/MasterData/RegionsCompo
 Vue.component('provinces-component', require('./components/MasterData/ProvincesComponent.vue').default);
 Vue.component('companies-component', require('./components/MasterData/CompaniesComponent.vue').default);
 Vue.component('departments-component', require('./components/MasterData/DepartmentsComponent.vue').default);
+Vue.component('employees-component', require('./components/MasterData/EmployeesComponent.vue').default);
 
 /**
  * Next, we will create a fresh Vue application instance and attach it to

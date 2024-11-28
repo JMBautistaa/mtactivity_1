@@ -177,17 +177,11 @@ export default {
         };
     },
     methods: {
-        formatDateForDisplay(dateString) 
-        { let dateObject = new Date(dateString); 
-            return dateObject.toLocaleDateString("en-US", { 
-                year: 'numeric', 
-                month: 'long', 
-                day: 'numeric' });
-            },
         init() {
             this.name = '';
             this.address = '';
             this.established_date = '';
+            this.errors =[];
         },
         show() {
             axios.get('/master_data/companies/show').then(response => {
@@ -230,25 +224,38 @@ export default {
                 console.error("Invalid data passed to destroy method.");
                 return;
             }
-            axios.get("/master_data/companies/destroy/" + data.row.id)
-                .then((response) => {
-                    this.$fire({
-                        title: "Successfully Deleted!",
-                        text: response.data.message,
-                        type: "success",
-                        timer: 3000,
-                    });
-                    this.show();
-                })
-                .catch(() => {
-                    this.$fire({
-                        title: "Error!",
-                        text: "Failed to delete Company.",
-                        type: "error",
-                        timer: 3000,
-                    });
-                });
+            this.$swal({
+                title: "Are you sure?",
+                text: "Do you want to delete this Company?",
+                icon: "warning",
+                showCancelButton: true,
+                confirmButtonText: "Yes, delete it!",
+                cancelButtonText: "Cancel",
+                reverseButtons: true,
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    axios.get("/master_data/companies/destroy/" + data.row.id)
+                        .then((response) => {
+                            this.$fire({
+                                title: "Successfully Deleted!",
+                                text: response.data.message,
+                                type: "success",
+                                timer: 3000,
+                            });
+                            this.show();
+                        })
+                        .catch(() => {
+                            this.$fire({
+                                title: "Error!",
+                                text: "Failed to delete Company.",
+                                type: "error",
+                                timer: 3000,
+                            });
+                        });
+                }
+            });
         },
+
         edit(data) {
             this.isEdit = true;
             this.id = data.row.id;

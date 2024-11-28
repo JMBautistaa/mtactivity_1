@@ -108,9 +108,9 @@
                                 <select id="company_id" class="form-control" 
                                     :class="{'border-danger': errors.company_id}"  
                                     v-model="company_id">
-                                    <p class="text-danger" v-if="errors.company_id">{{ errors.company_id[0] }}</p>
                                     <option v-for="company in companies" :value="company.id">{{ company.name }}</option>
                                 </select>
+                                <p class="text-danger" v-if="errors.company_id">{{ errors.company_id[0] }}</p>
                             </div>
 
                             <div class="form-group">
@@ -123,7 +123,7 @@
 
                             <div class="form-group">
                                 <label for="budget">Budget</label>
-                                <input type="text" class="form-control" 
+                                <input type="number" class="form-control" 
                                     :class="{'border-danger': errors.budget}" 
                                     v-model="budget">
                                 <p class="text-danger" v-if="errors.budget">{{ errors.budget[0] }}</p>
@@ -180,8 +180,10 @@ export default {
     },
     methods: {
         init() {
+            this.company_id = '',
             this.name = '';
             this.budget = '';
+            this.errors = [];
         },
         show() {
             axios.get('/master_data/departments/show').then(response => {
@@ -196,6 +198,7 @@ export default {
         closeModal() {
             $('#create-dept').modal('hide');
         },
+        
         store() {
             this.isLoading = true;
             axios.post('/master_data/departments/store', {
@@ -212,35 +215,67 @@ export default {
                 this.show();
                 this.init();
                 this.closeModal();
+
+                this.errors = {};
             }).catch((error) => {
-                this.errors = error.response.data.errors || {};
+                if (error.response && error.response.status === 422 && error.response.data.message === 'Cannot save the same shits') {
+                    this.$fire({
+                        title: 'Error!',
+                        text: 'A department with the same name already exists for this company.',
+                        type: 'error',
+                        timer: 3000,
+                    });
+                } else if (error.response && error.response.data.errors) {
+                    this.errors = error.response.data.errors;
+                } else if (error.response && error.response.data.message) {
+                    this.$fire({
+                        title: 'Error!',
+                        text: error.response.data.message,
+                        type: 'error',
+                        timer: 3000,
+                    });
+                }
+
             }).finally(() => {
                 this.isLoading = false;
             });
         },
+
         destroy(data) {
             if (!data?.row?.id) {
                 console.error("Invalid data passed to destroy method.");
                 return;
             }
-            axios.get("/master_data/departments/destroy/" + data.row.id)
-                .then((response) => {
-                    this.$fire({
-                        title: "Successfully Deleted!",
-                        text: response.data.message,
-                        type: "success",
-                        timer: 3000,
-                    });
-                    this.show();
-                })
-                .catch(() => {
-                    this.$fire({
-                        title: "Error!",
-                        text: "Failed to delete Company.",
-                        type: "error",
-                        timer: 3000,
-                    });
-                });
+            this.$swal({
+                title: "Are you sure?",
+                text: "Are you sure you want to delete this Department?",
+                icon: "warning",
+                showCancelButton: true,
+                confirmButtonText: "Yes, delete it!",
+                cancelButtonText: "Cancel",
+                reverseButtons: true,
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    axios.get("/master_data/departments/destroy/" + data.row.id)
+                        .then((response) => {
+                            this.$fire({
+                                title: "Successfully Deleted!",
+                                text: response.data.message,
+                                type: "success",
+                                timer: 3000,
+                            });
+                            this.show();
+                        })
+                        .catch(() => {
+                            this.$fire({
+                                title: "Error!",
+                                text: "Failed to delete Department.",
+                                type: "error",
+                                timer: 3000,
+                            });
+                        });
+                }
+            });
         },
         edit(data) {
             this.isEdit = true;
