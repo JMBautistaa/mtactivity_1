@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\CityController;
+use App\Http\Controllers\EmployeeController;
 use App\Http\Controllers\DepartmentController;
 use App\Http\Controllers\CompanyController;
 use App\Http\Controllers\ProvinceController;
@@ -70,7 +71,14 @@ Route::group(['middleware' => 'auth'], function () {
     Route::put('/master_data/departments/update/{id}', [DepartmentController::class, 'update']);
     Route::get('/master_data/departments/destroy/{id}', [DepartmentController::class, 'destroy']);
 
-
+    // Employees routes
+    Route::get('/master_data/employees', [EmployeeController::class, 'index']);
+    Route::get('/master_data/employees/show', [EmployeeController::class, 'show']);
+    Route::post('/master_data/employees/store', [EmployeeController::class, 'store']);
+    Route::get('/master_data/employees/edit/{id}', [EmployeeController::class, 'edit']);
+    Route::put('/master_data/employees/update/{id}', [EmployeeController::class, 'update']);
+    Route::get('/master_data/employees/destroy/{id}', [EmployeeController::class, 'destroy']);
+    Route::get('/master_data/employees/getDepartmentsByCompany/{id}', [EmployeeController::class, 'getDepartmentsByCompany']);
 
 
 });

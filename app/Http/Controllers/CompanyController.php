@@ -24,12 +24,13 @@ class CompanyController extends Controller
         $request->validate([
             'name' => 'required|unique:companies,name',
             'address' => 'required',
-            'established_date' => 'required|date',
+            'established_date' => 'required|date|before_or_equal:today',
         ], [
             'name.required' => 'The company name field is required.',
             'name.unique' => 'This company already exists.',
             'address.required' => 'The address field is required.',
             'established_date.required' => 'The established date field is required.',
+            'established_date.before_or_equal' => 'The established date is invalid.',
         ]);
 
         $data = new Company();
@@ -41,23 +42,29 @@ class CompanyController extends Controller
         return response()->json(['message' => 'Company successfully added']);
     }
 
-    public function edit($id)
-{
-    $data = Company::findOrFail($id);
-    return response()->json(['data' => $company]);
-}
+    public function edit($id) {
+
+        $data = Company::find($id);
+
+        if (!$data) {
+            return response()->json(['message' => 'Company not found'], 404);
+        }
+
+        return response()->json(['data' => $data]);
+    }
 
     public function update(Request $request, $id){
 
     $request->validate([
         'name' => 'required|unique:companies,name,' . $id,
         'address' => 'required',
-        'established_date' => 'required|date',
+        'established_date' => 'required|date|before_or_equal:today'
     ], [
         'name.required' => 'The company name field is required.',
         'name.unique' => 'This company already exists.',
         'address.required' => 'The address field is required.',
         'established_date.required' => 'The established date field is required.',
+        'established_date.before_or_equal' => 'The established date is invalid.',
     ]);
 
     $data = Company::findOrFail($id);

@@ -197,8 +197,7 @@ export default {
                     console.error('Error fetching provinces:', error);
                 });
         },
-        store() {
-            axios.post("/master_data/cities/store", {
+        store() {axios.post("/master_data/cities/store", {
                 name: this.name,
                 province_id: this.province_id,
             })
@@ -218,7 +217,8 @@ export default {
         },
         edit(data) {
             this.id = data.row.id;
-            axios.get('/master_data/cities/edit/' + this.id).then(response => {
+            axios.get('/master_data/cities/edit/' + this.id)
+            .then(response => {
                 const city = response.data.data;
                 this.region_id = city.province.region.id;
                 this.province_id = city.province_id;
@@ -231,6 +231,7 @@ export default {
         update() {
             axios.put("/master_data/cities/update/" + this.id, {
                 name: this.name,
+                region_id: this.region_id,
                 province_id: this.province_id,
             })
                 .then((response) => {

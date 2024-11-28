@@ -324,9 +324,9 @@ return [
                     'url' => 'master_data/departments',
                 ],
                 [
-                    'text' => 'Colleges',
-                    'icon' => 'fas fa-university',
-                    'url' => '#',
+                    'text' => 'Employees',
+                    'icon' => 'fas fa-user',
+                    'url' => 'master_data/employees',
                 ],
                 [
                     'text' => 'Courses',
