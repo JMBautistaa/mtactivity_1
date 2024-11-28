@@ -108,46 +108,69 @@
               <div class="modal-header">
                 <p class="title">{{ isEdit ? 'Edit Employee' : 'Create Employee' }}</p>
               </div>
+
               <div class="modal-body">
                 <div class="form-group">
                   <label for="company">Company</label>
-                  <select id="company_id" class="form-control" v-model="company_id" v-on:change="getDepartmentsByCompany">
+                  <select id="company_id" class="form-control" 
+                  :class="{'border-danger': errors.company_id}" 
+                  v-model="company_id" 
+                  v-on:change="getDepartmentsByCompany">
                         <option value="" disabled>Select Company</option>
                         <option v-for="value in companies" :value="value.id">{{ value.name }}</option>
                     </select>
+                    <p class="text-danger" v-if="errors.company_id">{{ errors.company_id[0] }}</p>
                 </div>
   
                 <div class="form-group">
                   <label for="department">Department</label>
-                  <select id="department_id" class="form-control" v-model="department_id">
+                  <select id="department_id" class="form-control" 
+                  :class="{'border-danger': errors.department_id}" 
+                  v-model="department_id">
                     <option value="" disabled>Select Department</option>
                     <option v-for="value in departments" :value="value.id">{{ value.name }}</option>
                   </select>
+                  <p class="text-danger" v-if="errors.department_id">{{ errors.department_id[0] }}</p>
                 </div>
   
                 <div class="form-group">
                   <label for="full_name">Full Name</label>
-                  <input type="text" id="full_name" class="form-control" v-model="full_name" />
+                  <input type="text" class="form-control"  id="full_name" 
+                  :class="{'border-danger': errors.full_name}" 
+                  v-model="full_name">
+                <p class="text-danger" v-if="errors.full_name">{{ errors.full_name[0] }}</p>
                 </div>
   
                 <div class="form-group">
                   <label for="email">Email</label>
-                  <input type="text" id="email" class="form-control" v-model="email" />
+                  <input type="text" id="email" class="form-control"
+                  :class="{'border-danger': errors.email}" 
+                  v-model="email" />
+                  <p class="text-danger" v-if="errors.email">{{ errors.email[0] }}</p>
                 </div>
   
                 <div class="form-group">
                   <label for="phone_number">Phone Number</label>
-                  <input type="number" id="phone_number" class="form-control" v-model="phone_number" />
+                  <input type="number" id="phone_number" class="form-control" 
+                  :class="{'border-danger': errors.phone_number}"
+                  v-model="phone_number" />
+                  <p class="text-danger" v-if="errors.phone_number">{{ errors.phone_number[0] }}</p>
                 </div>
   
                 <div class="form-group">
                   <label for="job_title">Job Title</label>
-                  <input type="text" id="job_title" class="form-control" v-model="job_title" />
+                  <input type="text" id="job_title" class="form-control" 
+                  :class="{'border-danger': errors.job_title}"
+                  v-model="job_title" />
+                  <p class="text-danger" v-if="errors.job_title">{{ errors.job_title[0] }}</p>
                 </div>
   
                 <div class="form-group">
                   <label for="hire_date">Hire Date</label>
-                  <input type="date" id="hire_date" class="form-control" v-model="hire_date" />
+                  <input type="date" id="hire_date" class="form-control" 
+                  :class="{'border-danger': errors.hire_date}"
+                  v-model="hire_date" />
+                  <p class="text-danger" v-if="errors.hire_date">{{ errors.hire_date[0] }}</p>
                 </div>
               </div>
   
@@ -233,6 +256,7 @@ export default {
         closeModal() {
             $('#create-emp').modal('hide');
             this.resetForm();
+            this.init();
         },
     getDepartmentsByCompany(){
       axios.get('/master_data/employees/getDepartmentsByCompany/' + this.company_id)
@@ -262,9 +286,12 @@ export default {
           });
           this.show();
           this.closeModal();
+          this.init();
         })
         .catch((error) => {
-          console.error("Error storing employee:", error.response.data);
+          this.errors = error.response.data.errors;
+        }).finally(() => {
+          this.isLoading = false;
         });
     },
     edit(data) {
@@ -304,9 +331,10 @@ export default {
           });
           this.show();
           this.closeModal();
-        })
-        .catch((error) => {
-        console.error("Error updating employee:", error.response ? error.response.data : error);
+        }).catch((error) => {
+          this.errors = error.response.data.errors;
+        }).finally(() => {
+          this.isLoading = false;
 });
 
     },
