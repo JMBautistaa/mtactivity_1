@@ -5771,6 +5771,7 @@ __webpack_require__.r(__webpack_exports__);
     closeModal: function closeModal() {
       $('#create-emp').modal('hide');
       this.resetForm();
+      this.init();
     },
     getDepartmentsByCompany: function getDepartmentsByCompany() {
       var _this2 = this;
@@ -5799,8 +5800,11 @@ __webpack_require__.r(__webpack_exports__);
         });
         _this3.show();
         _this3.closeModal();
+        _this3.init();
       })["catch"](function (error) {
-        console.error("Error storing employee:", error.response.data);
+        _this3.errors = error.response.data.errors;
+      })["finally"](function () {
+        _this3.isLoading = false;
       });
     },
     edit: function edit(data) {
@@ -5840,7 +5844,9 @@ __webpack_require__.r(__webpack_exports__);
         _this5.show();
         _this5.closeModal();
       })["catch"](function (error) {
-        console.error("Error updating employee:", error.response ? error.response.data : error);
+        _this5.errors = error.response.data.errors;
+      })["finally"](function () {
+        _this5.isLoading = false;
       });
     },
     destroy: function destroy(data) {
@@ -7335,6 +7341,9 @@ var render = function render() {
       expression: "company_id"
     }],
     staticClass: "form-control",
+    "class": {
+      "border-danger": _vm.errors.company_id
+    },
     attrs: {
       id: "company_id"
     },
@@ -7360,7 +7369,9 @@ var render = function render() {
         value: value.id
       }
     }, [_vm._v(_vm._s(value.name))]);
-  })], 2)]), _vm._v(" "), _c("div", {
+  })], 2), _vm._v(" "), _vm.errors.company_id ? _c("p", {
+    staticClass: "text-danger"
+  }, [_vm._v(_vm._s(_vm.errors.company_id[0]))]) : _vm._e()]), _vm._v(" "), _c("div", {
     staticClass: "form-group"
   }, [_c("label", {
     attrs: {
@@ -7374,6 +7385,9 @@ var render = function render() {
       expression: "department_id"
     }],
     staticClass: "form-control",
+    "class": {
+      "border-danger": _vm.errors.department_id
+    },
     attrs: {
       id: "department_id"
     },
@@ -7399,7 +7413,9 @@ var render = function render() {
         value: value.id
       }
     }, [_vm._v(_vm._s(value.name))]);
-  })], 2)]), _vm._v(" "), _c("div", {
+  })], 2), _vm._v(" "), _vm.errors.department_id ? _c("p", {
+    staticClass: "text-danger"
+  }, [_vm._v(_vm._s(_vm.errors.department_id[0]))]) : _vm._e()]), _vm._v(" "), _c("div", {
     staticClass: "form-group"
   }, [_c("label", {
     attrs: {
@@ -7413,6 +7429,9 @@ var render = function render() {
       expression: "full_name"
     }],
     staticClass: "form-control",
+    "class": {
+      "border-danger": _vm.errors.full_name
+    },
     attrs: {
       type: "text",
       id: "full_name"
@@ -7426,7 +7445,9 @@ var render = function render() {
         _vm.full_name = $event.target.value;
       }
     }
-  })]), _vm._v(" "), _c("div", {
+  }), _vm._v(" "), _vm.errors.full_name ? _c("p", {
+    staticClass: "text-danger"
+  }, [_vm._v(_vm._s(_vm.errors.full_name[0]))]) : _vm._e()]), _vm._v(" "), _c("div", {
     staticClass: "form-group"
   }, [_c("label", {
     attrs: {
@@ -7440,6 +7461,9 @@ var render = function render() {
       expression: "email"
     }],
     staticClass: "form-control",
+    "class": {
+      "border-danger": _vm.errors.email
+    },
     attrs: {
       type: "text",
       id: "email"
@@ -7453,7 +7477,9 @@ var render = function render() {
         _vm.email = $event.target.value;
       }
     }
-  })]), _vm._v(" "), _c("div", {
+  }), _vm._v(" "), _vm.errors.email ? _c("p", {
+    staticClass: "text-danger"
+  }, [_vm._v(_vm._s(_vm.errors.email[0]))]) : _vm._e()]), _vm._v(" "), _c("div", {
     staticClass: "form-group"
   }, [_c("label", {
     attrs: {
@@ -7467,6 +7493,9 @@ var render = function render() {
       expression: "phone_number"
     }],
     staticClass: "form-control",
+    "class": {
+      "border-danger": _vm.errors.phone_number
+    },
     attrs: {
       type: "number",
       id: "phone_number"
@@ -7480,7 +7509,9 @@ var render = function render() {
         _vm.phone_number = $event.target.value;
       }
     }
-  })]), _vm._v(" "), _c("div", {
+  }), _vm._v(" "), _vm.errors.phone_number ? _c("p", {
+    staticClass: "text-danger"
+  }, [_vm._v(_vm._s(_vm.errors.phone_number[0]))]) : _vm._e()]), _vm._v(" "), _c("div", {
     staticClass: "form-group"
   }, [_c("label", {
     attrs: {
@@ -7494,6 +7525,9 @@ var render = function render() {
       expression: "job_title"
     }],
     staticClass: "form-control",
+    "class": {
+      "border-danger": _vm.errors.job_title
+    },
     attrs: {
       type: "text",
       id: "job_title"
@@ -7507,7 +7541,9 @@ var render = function render() {
         _vm.job_title = $event.target.value;
       }
     }
-  })]), _vm._v(" "), _c("div", {
+  }), _vm._v(" "), _vm.errors.job_title ? _c("p", {
+    staticClass: "text-danger"
+  }, [_vm._v(_vm._s(_vm.errors.job_title[0]))]) : _vm._e()]), _vm._v(" "), _c("div", {
     staticClass: "form-group"
   }, [_c("label", {
     attrs: {
@@ -7521,6 +7557,9 @@ var render = function render() {
       expression: "hire_date"
     }],
     staticClass: "form-control",
+    "class": {
+      "border-danger": _vm.errors.hire_date
+    },
     attrs: {
       type: "date",
       id: "hire_date"
@@ -7534,7 +7573,9 @@ var render = function render() {
         _vm.hire_date = $event.target.value;
       }
     }
-  })])]), _vm._v(" "), _c("div", {
+  }), _vm._v(" "), _vm.errors.hire_date ? _c("p", {
+    staticClass: "text-danger"
+  }, [_vm._v(_vm._s(_vm.errors.hire_date[0]))]) : _vm._e()])]), _vm._v(" "), _c("div", {
     staticClass: "modal-footer"
   }, [_c("button", {
     staticClass: "btn btn-secondary",
@@ -12907,7 +12948,7 @@ __webpack_require__.r(__webpack_exports__);
 
 var ___CSS_LOADER_EXPORT___ = _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0___default()(function(i){return i[1]});
 // Module
-___CSS_LOADER_EXPORT___.push([module.id, " \n/* Shared Styles */\n.card {\n    border-radius: 10px;\n    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);\n    padding: 20px;\n    margin-top: 20px;\n}\n.title-header {\n    font-weight: bold;\n    margin: 0;\n    padding: 0;\n    font-size: 30px;\n}\n.VueTables__search-field label {\n    display: none;\n}\n.base-image-input {\n    display: block;\n    width: 200px;\n    height: 200px;\n    cursor: pointer;\n    background-size: cover;\n    background-position: center center;\n}\n.placeholder {\n    background: #F0F0F0;\n    width: 100%;\n    height: 100%;\n    display: flex;\n    justify-content: center;\n    align-items: center;\n    color: #333;\n    font-size: 18px;\n    font-family: Helvetica;\n}\n.placeholder:hover {\n    background: #E0E0E0;\n}\n.file-input {\n    display: none;\n}\n.modal-dialog {\n    display: flex;\n    justify-content: center;\n    align-items: center;\n    height: 100%;\n    margin: auto;\n}\n.breadcrumb {\n    font-size: 15px;\n    font-weight: bold;\n}\n.breadcrumb-item.active {\n    color: #28a745;\n}\n\n/* Button Style from Code 2 */\n.add-btn {\n    border: none;\n    width: 125px;\n    height: 40px;\n    background-color: #6baf6b;\n    color: white;\n    border-radius: 5px;\n    font-size: 14px;\n    transform: translate(170%, 100%);\n    z-index: 1;\n}\n", ""]);
+___CSS_LOADER_EXPORT___.push([module.id, " \r\n/* Shared Styles */\n.card {\r\n    border-radius: 10px;\r\n    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);\r\n    padding: 20px;\r\n    margin-top: 20px;\n}\n.title-header {\r\n    font-weight: bold;\r\n    margin: 0;\r\n    padding: 0;\r\n    font-size: 30px;\n}\n.VueTables__search-field label {\r\n    display: none;\n}\n.base-image-input {\r\n    display: block;\r\n    width: 200px;\r\n    height: 200px;\r\n    cursor: pointer;\r\n    background-size: cover;\r\n    background-position: center center;\n}\n.placeholder {\r\n    background: #F0F0F0;\r\n    width: 100%;\r\n    height: 100%;\r\n    display: flex;\r\n    justify-content: center;\r\n    align-items: center;\r\n    color: #333;\r\n    font-size: 18px;\r\n    font-family: Helvetica;\n}\n.placeholder:hover {\r\n    background: #E0E0E0;\n}\n.file-input {\r\n    display: none;\n}\n.modal-dialog {\r\n    display: flex;\r\n    justify-content: center;\r\n    align-items: center;\r\n    height: 100%;\r\n    margin: auto;\n}\n.breadcrumb {\r\n    font-size: 15px;\r\n    font-weight: bold;\n}\n.breadcrumb-item.active {\r\n    color: #28a745;\n}\r\n\r\n/* Button Style from Code 2 */\n.add-btn {\r\n    border: none;\r\n    width: 125px;\r\n    height: 40px;\r\n    background-color: #6baf6b;\r\n    color: white;\r\n    border-radius: 5px;\r\n    font-size: 14px;\r\n    transform: translate(170%, 100%);\r\n    z-index: 1;\n}\r\n", ""]);
 // Exports
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (___CSS_LOADER_EXPORT___);
 
